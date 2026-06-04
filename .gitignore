@@ -1,0 +1,18 @@
+# build artifacts
+dist/
+build/
+*.egg-info/
+__pycache__/
+*.pyc
+
+# default meme output
+meme.png
+*.png
+*.jpg
+*.webp
+*.gif
+!docs/**/*.png
+
+# envs
+.venv/
+venv/
