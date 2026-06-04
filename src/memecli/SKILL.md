@@ -14,8 +14,8 @@ The `meme` command must be installed. Check with `meme --list`. If it's missing,
 install it:
 
 ```bash
-pip install makememe
-# or: uv tool install makememe
+uv tool install makememe
+# or: pipx install makememe
 ```
 
 ## Workflow

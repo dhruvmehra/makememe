@@ -13,18 +13,31 @@ meme drake "not reading docs" "reading docs" -o out.png
 
 ## Install
 
-Requires Python 3.8+.
+Requires Python 3.8+. Easiest is [uv](https://docs.astral.sh/uv/) (installs
+the `meme` command in its own isolated environment):
 
 ```bash
-pip install makememe
-# or, as an isolated tool:
-uv tool install makememe      # or: pipx install makememe
+uv tool install makememe          # or: pipx install makememe
 ```
 
-Run once without installing:
+Update later with:
+
+```bash
+uv tool upgrade makememe
+```
+
+Run once without installing anything:
 
 ```bash
 uvx --from makememe meme drake "a" "b"
+```
+
+(If you specifically want pip: `python3 -m pip install makememe`.)
+
+Check the version anytime:
+
+```bash
+meme --version
 ```
 
 ## Usage
@@ -90,21 +103,19 @@ meme drake "old way" "new way" --json    # generate, capture the path
 
 ### Claude Code skill
 
-A ready-made skill lives in [`skill/meme/`](skill/meme/SKILL.md). Install it so
-Claude Code auto-discovers the tool:
+The package bundles a Claude Code skill. After installing, run one command to
+make Claude Code auto-discover the tool:
 
 ```bash
-# user-level (all projects)
-mkdir -p ~/.claude/skills
-cp -r skill/meme ~/.claude/skills/meme
-
-# or project-level
-mkdir -p .claude/skills
-cp -r skill/meme .claude/skills/meme
+meme --install-skill              # installs into ~/.claude/skills/meme/ (all projects)
+meme --install-skill --project    # or into ./.claude/skills/meme/ (this repo only)
 ```
 
-Then just ask Claude Code things like *"make a drake meme about writing tests"*
-and it will call `meme` for you.
+Restart Claude Code, then just ask things like *"make a drake meme about
+writing tests"* and it will call `meme` for you.
+
+(Other agents like Codex don't use this skill format — they discover everything
+through `meme --help` and `meme --list`, which already works out of the box.)
 
 ## Robustness
 

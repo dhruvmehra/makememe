@@ -5,6 +5,7 @@ No network access required (network paths are covered by --print-url style asser
 """
 
 import io
+import os
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 
@@ -100,6 +101,30 @@ class TestCrashSafety(unittest.TestCase):
                 self.assertEqual(self._exit_code(["drake", "a", "--json"]), 1)
         finally:
             cli.download = orig
+
+
+class TestNewCommands(unittest.TestCase):
+    def test_version_flag_prints_and_exits(self):
+        buf = io.StringIO()
+        with self.assertRaises(SystemExit) as ctx, redirect_stdout(buf):
+            cli.main(["--version"])
+        self.assertEqual(ctx.exception.code, 0)
+        self.assertIn("meme", buf.getvalue())
+
+    def test_install_skill_writes_file(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            old = os.environ.get("HOME")
+            os.environ["HOME"] = d
+            try:
+                with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                    cli.main(["--install-skill"])
+                dest = os.path.join(d, ".claude", "skills", "meme", "SKILL.md")
+                self.assertTrue(os.path.exists(dest))
+                self.assertIn("name: meme", open(dest).read())
+            finally:
+                if old is not None:
+                    os.environ["HOME"] = old
 
 
 if __name__ == "__main__":

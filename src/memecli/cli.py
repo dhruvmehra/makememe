@@ -29,6 +29,35 @@ import urllib.request
 API = "https://api.memegen.link"
 
 
+def get_version():
+    """Read the installed package version; fall back gracefully from source."""
+    try:
+        from importlib.metadata import version
+        return version("makememe")
+    except Exception:
+        return "0.0.0+source"
+
+
+def install_skill(project=False):
+    """Copy the bundled Claude Code skill into ~/.claude/skills/meme/ (or ./.claude
+    with project=True). Returns the path written."""
+    try:
+        from importlib.resources import files
+        content = files("memecli").joinpath("SKILL.md").read_text(encoding="utf-8")
+    except Exception:
+        # running from a source checkout without installed metadata
+        here = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(here, "SKILL.md"), encoding="utf-8") as f:
+            content = f.read()
+    base = os.getcwd() if project else os.path.expanduser("~")
+    dest_dir = os.path.join(base, ".claude", "skills", "meme")
+    os.makedirs(dest_dir, exist_ok=True)
+    dest = os.path.join(dest_dir, "SKILL.md")
+    with open(dest, "w", encoding="utf-8") as f:
+        f.write(content)
+    return dest
+
+
 # memegen path-segment escaping. Order matters: escape the escape chars first.
 # Confirmed from the API: space->_, _->__, -->--, ?->~q, newline->~n, "->''
 # Others use memegen's documented tilde codes; verify with --print-url if unsure.
@@ -96,6 +125,12 @@ def build_parser():
                "before your lines so it isn't read as a flag:\n"
                "  meme regret --json -- \"-26%\" \"WHY\"",
         formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--version", action="version",
+                    version=f"%(prog)s {get_version()}")
+    ap.add_argument("--install-skill", action="store_true",
+                    help="install the Claude Code skill into ~/.claude/skills/meme/ and exit")
+    ap.add_argument("--project", action="store_true",
+                    help="with --install-skill: install into ./.claude/skills/ instead of your home dir")
     ap.add_argument("template", nargs="?",
                     help="template id (see --list), or any id when using --bg")
     ap.add_argument("lines", nargs="*", help="text lines, in order")
@@ -118,6 +153,15 @@ def build_parser():
 def _run(argv=None):
     ap = build_parser()
     args = ap.parse_args(argv)
+
+    if args.install_skill:
+        try:
+            dest = install_skill(project=args.project)
+        except Exception as e:
+            sys.exit(f"could not install skill: {e}")
+        print(dest)
+        print("Skill installed. Restart Claude Code to pick it up.", file=sys.stderr)
+        return
 
     if args.list:
         try:
