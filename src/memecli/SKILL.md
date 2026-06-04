@@ -26,9 +26,13 @@ uv tool install makememe
    meme --list --json
    ```
 
-   Common ids: `drake`, `db` (distracted boyfriend), `buttons` (two buttons),
-   `gru` (gru's plan), `cmm` (change my mind), `fine` (this is fine),
-   `success` (success kid), `rollsafe`, `same` (same picture), `regret`.
+   Common ids: `drake`, `db` (distracted boyfriend), `ds` (daily struggle /
+   "two buttons"), `gru` (gru's plan), `cmm` (change my mind),
+   `fine` (this is fine), `success` (success kid), `rollsafe`,
+   `same` (same picture), `regret`.
+
+   **Always verify an id with `meme --list --json` before using it** — guessing
+   ids (e.g. `buttons`, `twobuttons`) leads to 404s. When unsure, list first.
 
 2. **Generate.** Pass the template id then the caption lines in order. Use
    `--json` so you can capture the output path reliably:

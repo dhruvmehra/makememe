@@ -193,10 +193,21 @@ def _run(argv=None):
     try:
         n = download(url, args.out)
     except Exception as e:
+        # a 404 almost always means a bad template id — point the user/agent at --list
+        hint = None
+        if getattr(e, "code", None) == 404 and not args.bg:
+            hint = (f"template '{template}' not found (404). "
+                    "Run `meme --list` to find the correct id.")
         if args.json:
-            print(json.dumps({"error": str(e), "url": url}))
+            out = {"error": str(e), "url": url}
+            if hint:
+                out["hint"] = hint
+            print(json.dumps(out))
             sys.exit(1)
-        sys.exit(f"download failed: {e}\nurl was: {url}")
+        msg = f"download failed: {e}\nurl was: {url}"
+        if hint:
+            msg += f"\nhint: {hint}"
+        sys.exit(msg)
 
     if args.json:
         print(json.dumps({"path": args.out, "bytes": n, "url": url}))

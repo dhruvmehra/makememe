@@ -93,6 +93,19 @@ class TestCrashSafety(unittest.TestCase):
         finally:
             cli.download = orig
 
+    def test_404_adds_list_hint(self):
+        class FakeHTTPError(Exception):
+            code = 404
+        orig = cli.download
+        cli.download = lambda *a, **k: (_ for _ in ()).throw(FakeHTTPError("404"))
+        try:
+            buf = io.StringIO()
+            with redirect_stdout(buf), redirect_stderr(io.StringIO()):
+                self.assertEqual(self._exit_code(["buttons", "a", "b", "--json"]), 1)
+            self.assertIn("meme --list", buf.getvalue())
+        finally:
+            cli.download = orig
+
     def test_download_failure_is_clean_exit_in_json(self):
         orig = cli.download
         cli.download = lambda *a, **k: (_ for _ in ()).throw(OSError("boom"))
