@@ -69,6 +69,21 @@ meme --list
 meme --list --json
 ```
 
+## Integrations
+
+For sharing (CI, chat, comments) you usually want the **public URL**, not a
+local file — `--print-url` returns a permanent memegen.link URL you can embed
+anywhere with `![meme](url)`. No download, no image hosting.
+
+- **GitHub Actions → PR comment:** ready-to-copy workflow at
+  [`examples/pr-meme.yml`](examples/pr-meme.yml) — comments a success/“this is
+  fine” meme on each PR based on whether tests passed.
+- **Slack/Discord:** post the URL to a channel; it auto-unfurls into a preview.
+
+```bash
+url=$(meme -t success "build" "passed" --print-url)   # -> public URL, embed it anywhere
+```
+
 ### Text that starts with `-`
 
 If a caption line begins with `-` (e.g. `"-26%"`), put `--` before your lines so

@@ -1,0 +1,40 @@
+# Example: comment a meme on every pull request based on whether tests passed.
+#
+# How it works: it never downloads an image. `meme --print-url` returns a public
+# memegen.link URL, and GitHub renders `![meme](url)` inline in the PR comment.
+#
+# Copy this into your repo at .github/workflows/pr-meme.yml and adjust the
+# "Run tests" step to your project's test command.
+
+name: pr-meme
+
+on: pull_request
+
+permissions:
+  contents: read
+  pull-requests: write        # needed to post the PR comment
+
+jobs:
+  meme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run tests
+        id: tests
+        run: |
+          # <-- replace with your real test command, e.g. `npm test` or `pytest`
+          echo "pretend tests run here"
+
+      - name: Comment a meme with the result
+        if: always()            # run even if tests failed
+        run: |
+          pip install --quiet makememe
+          if [ "${{ steps.tests.outcome }}" = "success" ]; then
+            url=$(meme -t success "tests" "passed" --print-url)
+          else
+            url=$(meme -t fine "tests failed" "this is fine" --print-url)
+          fi
+          gh pr comment "${{ github.event.pull_request.number }}" --body "![meme]($url)"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
