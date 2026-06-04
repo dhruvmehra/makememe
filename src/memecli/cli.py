@@ -23,10 +23,21 @@ import argparse
 import json
 import os
 import sys
+import tempfile
 import urllib.parse
 import urllib.request
 
 API = "https://api.memegen.link"
+
+
+def default_output(ext):
+    """A unique output path in a grouped temp folder, so we never write into the
+    user's project/root dir and never clobber a previous meme."""
+    d = os.path.join(tempfile.gettempdir(), "makememe")
+    os.makedirs(d, exist_ok=True)
+    fd, path = tempfile.mkstemp(prefix="meme-", suffix=f".{ext}", dir=d)
+    os.close(fd)
+    return path
 
 
 def get_version():
@@ -134,8 +145,8 @@ def build_parser():
     ap.add_argument("template", nargs="?",
                     help="template id (see --list), or any id when using --bg")
     ap.add_argument("lines", nargs="*", help="text lines, in order")
-    ap.add_argument("-o", "--out", default="meme.png",
-                    help="output file (default meme.png)")
+    ap.add_argument("-o", "--out", default=None,
+                    help="output file (default: a temp folder, not your current dir)")
     ap.add_argument("--bg",
                     help="custom background image URL (uses the 'custom' template)")
     ap.add_argument("--ext", default="png", choices=["png", "jpg", "webp", "gif"])
@@ -190,8 +201,10 @@ def _run(argv=None):
             print(url)
         return
 
+    out = args.out if args.out else default_output(args.ext)
+
     try:
-        n = download(url, args.out)
+        n = download(url, out)
     except Exception as e:
         # a 404 almost always means a bad template id — point the user/agent at --list
         hint = None
@@ -199,10 +212,10 @@ def _run(argv=None):
             hint = (f"template '{template}' not found (404). "
                     "Run `meme --list` to find the correct id.")
         if args.json:
-            out = {"error": str(e), "url": url}
+            payload = {"error": str(e), "url": url}
             if hint:
-                out["hint"] = hint
-            print(json.dumps(out))
+                payload["hint"] = hint
+            print(json.dumps(payload))
             sys.exit(1)
         msg = f"download failed: {e}\nurl was: {url}"
         if hint:
@@ -210,9 +223,9 @@ def _run(argv=None):
         sys.exit(msg)
 
     if args.json:
-        print(json.dumps({"path": args.out, "bytes": n, "url": url}))
+        print(json.dumps({"path": out, "bytes": n, "url": url}))
     else:
-        print(args.out)                   # stdout: just the path, easy to capture
+        print(out)                        # stdout: just the path, easy to capture
         print(f"saved {n} bytes from {url}", file=sys.stderr)
 
 

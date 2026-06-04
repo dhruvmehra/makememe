@@ -44,15 +44,17 @@ uv tool install makememe
    Output:
 
    ```json
-   { "path": "meme.png", "bytes": 12345, "url": "https://api.memegen.link/..." }
+   { "path": "/tmp/makememe/meme-ab12cd.png", "bytes": 12345, "url": "https://api.memegen.link/..." }
    ```
 
 3. **Tell the user the path** (and show the image if the surface supports it).
 
 ## Key flags
 
-- `-o out.png` — choose the output filename (default `meme.png`). Pick a
-  descriptive name when generating several.
+- By default the image is saved to a temp folder (`<tmp>/makememe/`) with a
+  unique name, so it never clutters the user's working directory. The path is
+  in the output — report it to the user. Use `-o path.png` only if the user
+  wants it saved somewhere specific.
 - `--bg <image-url>` — use a custom background image instead of a template;
   pass caption lines as usual.
 - `--ext png|jpg|webp|gif` — output format.

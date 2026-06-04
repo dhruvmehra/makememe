@@ -48,7 +48,7 @@ meme <template> "top line" "bottom line" [-o out.png]
 
 | Flag | Meaning |
 |------|---------|
-| `-o, --out` | output file (default `meme.png`) |
+| `-o, --out` | output file (default: a unique file in a temp folder, so it never writes into your current directory) |
 | `--bg URL` | use a custom background image instead of a template |
 | `--ext` | `png` (default), `jpg`, `webp`, or `gif` |
 | `--style` / `--font` | template style variant / font override |
@@ -87,7 +87,7 @@ The tool is designed to be parsed:
 - **`--json` mode** prints a single JSON object:
 
   ```json
-  { "path": "meme.png", "bytes": 12345, "url": "https://api.memegen.link/..." }
+  { "path": "/tmp/makememe/meme-ab12cd.png", "bytes": 12345, "url": "https://api.memegen.link/..." }
   ```
 
   `--list --json` returns the template catalog as JSON; `--print-url --json`

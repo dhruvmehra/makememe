@@ -116,6 +116,28 @@ class TestCrashSafety(unittest.TestCase):
             cli.download = orig
 
 
+class TestDefaultOutput(unittest.TestCase):
+    def test_default_is_in_tempdir_not_cwd(self):
+        import tempfile
+        p = cli.default_output("png")
+        self.assertTrue(p.startswith(tempfile.gettempdir()))
+        self.assertTrue(p.endswith(".png"))
+        # cleanup the empty file mkstemp created
+        try:
+            os.remove(p)
+        except OSError:
+            pass
+
+    def test_default_paths_are_unique(self):
+        a, b = cli.default_output("png"), cli.default_output("png")
+        self.assertNotEqual(a, b)
+        for p in (a, b):
+            try:
+                os.remove(p)
+            except OSError:
+                pass
+
+
 class TestNewCommands(unittest.TestCase):
     def test_version_flag_prints_and_exits(self):
         buf = io.StringIO()
