@@ -52,6 +52,7 @@ meme <template> "top line" "bottom line" [-o out.png]
 | `--bg URL` | use a custom background image instead of a template |
 | `--ext` | `png` (default), `jpg`, `webp`, or `gif` |
 | `--style` / `--font` | template style variant / font override |
+| `--open` | open the finished image in your default viewer |
 | `--print-url` | print the image URL, don't download |
 | `--json` | machine-readable output (for scripts/agents) |
 | `--list` | list available template ids |

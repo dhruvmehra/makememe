@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "makememe"
-version = "0.1.4"
+version = "0.1.5"
 description = "A tiny zero-dependency CLI for generating memes via the free memegen.link API. Agent-friendly."
 readme = "README.md"
 requires-python = ">=3.8"

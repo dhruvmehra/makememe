@@ -34,11 +34,12 @@ uv tool install makememe
    **Always verify an id with `meme --list --json` before using it** — guessing
    ids (e.g. `buttons`, `twobuttons`) leads to 404s. When unsure, list first.
 
-2. **Generate.** Pass the template id then the caption lines in order. Use
-   `--json` so you can capture the output path reliably:
+2. **Generate.** Pass the template id then the caption lines in order. Always
+   use `--json` (reliable output path) and `--open` (opens the finished meme in
+   the user's default image viewer so they actually see it):
 
    ```bash
-   meme drake "writing code by hand" "asking the meme cli" --json
+   meme drake "writing code by hand" "asking the meme cli" --json --open
    ```
 
    Output:
@@ -47,7 +48,8 @@ uv tool install makememe
    { "path": "/tmp/makememe/meme-ab12cd.png", "bytes": 12345, "url": "https://api.memegen.link/..." }
    ```
 
-3. **Tell the user the path** (and show the image if the surface supports it).
+3. **Tell the user the path.** The `--open` flag already popped the image open
+   for them; just report where it was saved.
 
 ## Key flags
 
@@ -58,6 +60,8 @@ uv tool install makememe
 - `--bg <image-url>` — use a custom background image instead of a template;
   pass caption lines as usual.
 - `--ext png|jpg|webp|gif` — output format.
+- `--open` — open the finished image in the user's default viewer (use this so
+  they can see the meme).
 - `--print-url` — get the image URL without downloading.
 - `--json` — machine-readable output (always prefer this when scripting).
 
@@ -77,8 +81,8 @@ uv tool install makememe
 ## Examples
 
 ```bash
-meme drake "old way" "new way" -o drake.png --json
-meme same "after I sold" "if I held" "same picture" --json
-meme cmm "tabs are better than spaces" --json
-meme --bg https://example.com/cat.png "_" "DEPLOY ON FRIDAY" --json
+meme drake "old way" "new way" --json --open
+meme same "after I sold" "if I held" "same picture" --json --open
+meme cmm "tabs are better than spaces" --json --open
+meme --bg https://example.com/cat.png "_" "DEPLOY ON FRIDAY" --json --open
 ```

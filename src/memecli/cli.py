@@ -22,12 +22,29 @@ Find templates: https://api.memegen.link/templates/  (or `meme --list`)
 import argparse
 import json
 import os
+import shutil
+import subprocess
 import sys
 import tempfile
 import urllib.parse
 import urllib.request
 
 API = "https://api.memegen.link"
+
+
+def open_file(path):
+    """Open a file with the OS default viewer. Best-effort; never raises."""
+    try:
+        if sys.platform == "darwin":
+            subprocess.run(["open", path], check=False)
+        elif sys.platform.startswith("win"):
+            os.startfile(path)  # noqa: B606  (Windows only)
+        else:
+            opener = shutil.which("xdg-open")
+            if opener:
+                subprocess.run([opener, path], check=False)
+    except Exception:
+        pass
 
 
 def default_output(ext):
@@ -152,6 +169,8 @@ def build_parser():
     ap.add_argument("--ext", default="png", choices=["png", "jpg", "webp", "gif"])
     ap.add_argument("--style", help="template style variant, if any")
     ap.add_argument("--font", help="font name (see /fonts/)")
+    ap.add_argument("--open", action="store_true", dest="open_after",
+                    help="open the saved image in the OS default viewer")
     ap.add_argument("--print-url", action="store_true",
                     help="print the URL and exit, no download")
     ap.add_argument("--json", action="store_true",
@@ -221,6 +240,9 @@ def _run(argv=None):
         if hint:
             msg += f"\nhint: {hint}"
         sys.exit(msg)
+
+    if args.open_after:
+        open_file(out)
 
     if args.json:
         print(json.dumps({"path": out, "bytes": n, "url": url}))
