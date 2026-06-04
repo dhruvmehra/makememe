@@ -34,39 +34,51 @@ uv tool install makememe
    **Always verify an id with `meme --list --json` before using it** — guessing
    ids (e.g. `buttons`, `twobuttons`) leads to 404s. When unsure, list first.
 
-2. **Generate.** Pass the template id with `-t` (as a flag, not the leading
-   word) then the caption lines in order. Always use `--json` (reliable output
-   path) and `--open` (opens the finished meme in the user's default viewer).
+2. **Get the URL (default).** Pass the template id with `-t` (as a flag, not the
+   leading word) then the caption lines, and use `--print-url`. This returns a
+   public, permanent memegen.link URL — no file is downloaded:
+
+   ```bash
+   meme -t drake "writing code by hand" "asking the meme cli" --print-url
+   ```
+
+   Output (just the URL):
+
+   ```
+   https://api.memegen.link/images/drake/writing_code_by_hand/asking_the_meme_cli.png
+   ```
 
    Using `-t` matters: every call starts with the same `meme -t ...` prefix, so
    the user only has to approve the command **once** — not once per template.
 
-   ```bash
-   meme -t drake "writing code by hand" "asking the meme cli" --json --open
-   ```
+3. **Give the user the URL** as a clickable link — they can open it in a browser
+   or paste it into Slack/GitHub (it renders inline with `![meme](url)`). Don't
+   download a file unless they ask for one (see "Saving a local file" below).
 
-   Output:
+## Saving a local file
 
-   ```json
-   { "path": "/tmp/makememe/meme-ab12cd.png", "bytes": 12345, "url": "https://api.memegen.link/..." }
-   ```
+Only when the user explicitly wants a file (to attach it, edit it, or see it pop
+open) — drop `--print-url` and instead:
 
-3. **Tell the user the path.** The `--open` flag already popped the image open
-   for them; just report where it was saved.
+```bash
+meme -t drake "a" "b" --open          # saves to a temp folder AND opens it in the viewer
+meme -t drake "a" "b" -o ~/meme.png   # save to a specific path
+```
+
+By default (without `-o`) a downloaded file goes to a temp folder
+(`<tmp>/makememe/`) with a unique name, so it never clutters the user's working
+directory.
 
 ## Key flags
 
-- By default the image is saved to a temp folder (`<tmp>/makememe/`) with a
-  unique name, so it never clutters the user's working directory. The path is
-  in the output — report it to the user. Use `-o path.png` only if the user
-  wants it saved somewhere specific.
+- `--print-url` — return the public URL instead of downloading (the default
+  choice; prefer this).
+- `--open` — download and open the image in the user's default viewer.
+- `-o path.png` — save the download to a specific path.
 - `--bg <image-url>` — use a custom background image instead of a template;
   pass caption lines as usual.
 - `--ext png|jpg|webp|gif` — output format.
-- `--open` — open the finished image in the user's default viewer (use this so
-  they can see the meme).
-- `--print-url` — get the image URL without downloading.
-- `--json` — machine-readable output (always prefer this when scripting).
+- `--json` — machine-readable output (use when you need to parse it in a script).
 
 ## Tips
 
@@ -84,8 +96,9 @@ uv tool install makememe
 ## Examples
 
 ```bash
-meme -t drake "old way" "new way" --json --open
-meme -t same "after I sold" "if I held" "same picture" --json --open
-meme -t cmm "tabs are better than spaces" --json --open
-meme --bg https://example.com/cat.png "_" "DEPLOY ON FRIDAY" --json --open
+meme -t drake "old way" "new way" --print-url
+meme -t same "after I sold" "if I held" "same picture" --print-url
+meme -t cmm "tabs are better than spaces" --print-url
+meme --bg https://example.com/cat.png "_" "DEPLOY ON FRIDAY" --print-url
+meme -t drake "save me" "to a file" --open          # only when the user wants a file
 ```
