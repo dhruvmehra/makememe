@@ -34,12 +34,15 @@ uv tool install makememe
    **Always verify an id with `meme --list --json` before using it** — guessing
    ids (e.g. `buttons`, `twobuttons`) leads to 404s. When unsure, list first.
 
-2. **Generate.** Pass the template id then the caption lines in order. Always
-   use `--json` (reliable output path) and `--open` (opens the finished meme in
-   the user's default image viewer so they actually see it):
+2. **Generate.** Pass the template id with `-t` (as a flag, not the leading
+   word) then the caption lines in order. Always use `--json` (reliable output
+   path) and `--open` (opens the finished meme in the user's default viewer).
+
+   Using `-t` matters: every call starts with the same `meme -t ...` prefix, so
+   the user only has to approve the command **once** — not once per template.
 
    ```bash
-   meme drake "writing code by hand" "asking the meme cli" --json --open
+   meme -t drake "writing code by hand" "asking the meme cli" --json --open
    ```
 
    Output:
@@ -81,8 +84,8 @@ uv tool install makememe
 ## Examples
 
 ```bash
-meme drake "old way" "new way" --json --open
-meme same "after I sold" "if I held" "same picture" --json --open
-meme cmm "tabs are better than spaces" --json --open
+meme -t drake "old way" "new way" --json --open
+meme -t same "after I sold" "if I held" "same picture" --json --open
+meme -t cmm "tabs are better than spaces" --json --open
 meme --bg https://example.com/cat.png "_" "DEPLOY ON FRIDAY" --json --open
 ```

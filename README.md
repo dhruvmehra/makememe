@@ -48,6 +48,7 @@ meme <template> "top line" "bottom line" [-o out.png]
 
 | Flag | Meaning |
 |------|---------|
+| `-t, --template` | template id as a flag (alternative to the positional). Agents should use this so a single permission approval covers every template |
 | `-o, --out` | output file (default: a unique file in a temp folder, so it never writes into your current directory) |
 | `--bg URL` | use a custom background image instead of a template |
 | `--ext` | `png` (default), `jpg`, `webp`, or `gif` |

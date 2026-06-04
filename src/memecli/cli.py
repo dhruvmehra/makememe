@@ -162,6 +162,9 @@ def build_parser():
     ap.add_argument("template", nargs="?",
                     help="template id (see --list), or any id when using --bg")
     ap.add_argument("lines", nargs="*", help="text lines, in order")
+    ap.add_argument("-t", "--template", dest="template_flag",
+                    help="template id as a flag (keeps a constant command prefix, "
+                         "so one permission approval covers every template)")
     ap.add_argument("-o", "--out", default=None,
                     help="output file (default: a temp folder, not your current dir)")
     ap.add_argument("--bg",
@@ -200,16 +203,20 @@ def _run(argv=None):
             sys.exit(f"could not fetch templates: {e}")
         return
 
-    if not args.template and not args.bg:
+    if not args.template and not args.template_flag and not args.bg:
         ap.error("a template id is required (or use --bg for a custom background)")
 
-    # with --bg there is no template positional, so fold it back into the lines
+    # with --bg or -t the template isn't the leading positional, so fold the
+    # positional back into the text lines.
     if args.bg:
-        lines = ([args.template] if args.template else []) + args.lines
         template = "custom"
+        lines = ([args.template] if args.template else []) + args.lines
+    elif args.template_flag:
+        template = args.template_flag
+        lines = ([args.template] if args.template else []) + args.lines
     else:
-        lines = args.lines
         template = args.template
+        lines = args.lines
 
     url = build_url(template, lines, args.ext, args.bg, args.style, args.font)
 

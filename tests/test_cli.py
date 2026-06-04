@@ -84,6 +84,17 @@ class TestCrashSafety(unittest.TestCase):
             cli.main(["drake", "a", "b", "--print-url"])
         self.assertIn("api.memegen.link/images/drake/a/b.png", buf.getvalue())
 
+    def test_template_flag_matches_positional(self):
+        def url_for(argv):
+            buf = io.StringIO()
+            with redirect_stdout(buf):
+                cli.main(argv)
+            return buf.getvalue().strip()
+        self.assertEqual(
+            url_for(["-t", "drake", "a", "b", "--print-url"]),
+            url_for(["drake", "a", "b", "--print-url"]),
+        )
+
     def test_keyboard_interrupt_becomes_130(self):
         orig = cli.download
         cli.download = lambda *a, **k: (_ for _ in ()).throw(KeyboardInterrupt())
