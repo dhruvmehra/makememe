@@ -20,38 +20,93 @@ uv tool install makememe
 
 ## Workflow
 
-1. **Pick a template.** If you don't already know a valid template id, list them:
+1. **Choose the most apt template — match the joke's *shape*, not a default.**
+
+   The single most important step. Don't reach for `drake` every time — it only
+   fits "rejecting A, preferring B." First work out the *rhetorical structure*
+   of the user's idea, then pick the template whose format matches it. The
+   catalog has ~200 templates; here is the high-value map by structure:
+
+   | The idea is…                                          | Template id   | Lines |
+   |-------------------------------------------------------|---------------|-------|
+   | Rejecting A, preferring B                             | `drake`       | 2 |
+   | Tempted away from the current thing by a shinier one  | `db`          | 3 |
+   | Agonizing between two conflicting options             | `ds`          | 3 |
+   | Swerving last-second to pick B over the obvious A     | `exit`        | 3 |
+   | A multi-step plan whose last step backfires           | `gru`         | 4 |
+   | Stating a hot take, daring you to argue               | `cmm`         | 1 |
+   | Pretending all is fine amid disaster                  | `fine`        | 2 |
+   | A small, satisfying win / "nailed it"                 | `success`     | 2 |
+   | Galaxy-brain "can't have the problem if you avoid it" | `rollsafe`    | 2 |
+   | Escalating "increasingly enlightened" (often ironic)  | `gb`          | 4 |
+   | Two things claimed different but actually identical   | `same`        | 3 |
+   | Immediate regret right after a choice                 | `regret`      | 2 |
+   | Mocking a statement by repeating it sarcastically     | `spongebob`   | 2 |
+   | An accusation vs. a smug, dismissive reply            | `woman-cat`   | 2 |
+   | "One does not simply X"                               | `mordor`      | 2 |
+   | "Not sure if X… or just Y" (suspicion)                | `fry`         | 2 |
+   | "False." + a blunt correction                         | `dwight`      | 2 |
+   | A forced smile hiding inner pain                      | `harold`      | 2 |
+   | Absurd gains from a dumb move                          | `stonks`      | 2 |
+   | "X, X everywhere"                                     | `buzz`        | 2 |
+   | "I'm not saying it's X… but it's X"                   | `aag`         | 2 |
+   | Smug delight at chaos you caused                      | `disastergirl`| 2 |
+   | Crude version vs. fancy/refined version of same thing | `pooh`        | 2 |
+   | An escalating back-and-forth argument                 | `chair`       | 6 |
+   | "Y U NO [do thing]"                                   | `yuno`        | 2 |
+
+   If none of these fit the joke, **browse the full catalog** instead of forcing
+   a bad fit:
 
    ```bash
-   meme --list --json
+   meme --list --json     # ~200 templates; scan the titles for a better match
    ```
 
-   Common ids: `drake`, `db` (distracted boyfriend), `ds` (daily struggle /
-   "two buttons"), `gru` (gru's plan), `cmm` (change my mind),
-   `fine` (this is fine), `success` (success kid), `rollsafe`,
-   `same` (same picture), `regret`.
+   **Always verify the chosen id with `meme --list --json` before using it** —
+   guessing ids (e.g. `buttons`, `twobuttons`) leads to 404s. The map above is
+   accurate, but confirm anything you pull from memory.
 
-   **Always verify an id with `meme --list --json` before using it** — guessing
-   ids (e.g. `buttons`, `twobuttons`) leads to 404s. When unsure, list first.
+2. **Write the funniest version — reason before you render.** Don't ship the
+   first phrasing that comes to mind. Briefly draft 2–3 caption options in your
+   head and pick the funniest, then render only that one. What makes it land:
 
-2. **Get the URL (default).** Pass the template id with `-t` (as a flag, not the
-   leading word) then the caption lines, and use `--print-url`. This returns a
-   public, permanent memegen.link URL — no file is downloaded:
+   - **Specificity beats generic.** "the `useEffect` that runs twice" is funnier
+     than "a bug." Reach for the concrete, in-context detail.
+   - **Punchy and short.** Meme text is read in a second — trim filler words,
+     keep each line tight, favor a sharp last word.
+   - **Match the template's voice.** Lean into the format's built-in attitude
+     (smug `rollsafe`, deadpan `fine`, escalating `gru`, mocking `spongebob`).
+   - **Respect the structure.** The funny comes from the *contrast* the template
+     sets up — make line A and line B actually play off each other.
+   - **Use the user's name/specifics verbatim.** If the user named a person,
+     team, tool, or thing ("make a meme about *Raj* and code reviews"), put that
+     exact name **into the caption text** — don't genericize it to "my coworker."
+     Names and inside-references are what make a meme land for its audience.
+
+3. **Get the URL (default).** Pass the chosen template id with `-t` (as a flag,
+   not the leading word) then the caption lines in the template's natural order,
+   and use `--print-url`. This returns a public, permanent memegen.link URL — no
+   file is downloaded:
 
    ```bash
-   meme -t drake "writing code by hand" "asking the meme cli" --print-url
+   meme -t ds "ship it Friday" "wait till Monday" --print-url
    ```
 
    Output (just the URL):
 
    ```
-   https://api.memegen.link/images/drake/writing_code_by_hand/asking_the_meme_cli.png
+   https://api.memegen.link/images/ds/ship_it_Friday/wait_till_Monday.png
    ```
+
+   Mind the line order for the template you picked — e.g. `db` reads
+   *new temptation / you / current thing*; `exit` reads *straight road / exit
+   ramp / the car*; `fine` is *top speech / bottom "this is fine"*. If a render
+   looks off, it's usually line order or count — re-check against `--list`.
 
    Using `-t` matters: every call starts with the same `meme -t ...` prefix, so
    the user only has to approve the command **once** — not once per template.
 
-3. **Give the user the URL** as a clickable link — they can open it in a browser
+4. **Give the user the URL** as a clickable link — they can open it in a browser
    or paste it into Slack/GitHub (it renders inline with `![meme](url)`). Don't
    download a file unless they ask for one (see "Saving a local file" below).
 
@@ -95,10 +150,16 @@ directory.
 
 ## Examples
 
+Each picks the template that fits the joke's shape — not all drake:
+
 ```bash
-meme -t drake "old way" "new way" --print-url
-meme -t same "after I sold" "if I held" "same picture" --print-url
-meme -t cmm "tabs are better than spaces" --print-url
-meme --bg https://example.com/cat.png "_" "DEPLOY ON FRIDAY" --print-url
-meme -t drake "save me" "to a file" --open          # only when the user wants a file
+meme -t drake "old way" "new way" --print-url                       # reject A, prefer B
+meme -t ds "merge to main" "open another PR" --print-url            # agonizing between two options
+meme -t fine "prod is down" "this is fine" --print-url              # disaster, pretending it's ok
+meme -t gru "write the tests" "tests fail" "fix the code" "tests still fail" --print-url   # plan backfires
+meme -t same "staging" "prod" "they're the same picture" --print-url  # claimed different, identical
+meme -t cmm "tabs are better than spaces" --print-url               # one-line hot take
+meme -t mordor "one does not simply" "deploy on Friday" --print-url # "one does not simply X"
+meme --bg https://example.com/cat.png "_" "DEPLOY ON FRIDAY" --print-url  # custom background
+meme -t success "fixed the bug" "on the first try" --open           # only when the user wants a file
 ```
