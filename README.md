@@ -169,8 +169,24 @@ meme --install-skill              # installs into ~/.claude/skills/meme/ (all pr
 meme --install-skill --project    # or into ./.claude/skills/meme/ (this repo only)
 ```
 
-Restart Claude Code, then just ask things like *"make a drake meme about
-writing tests"* and it will call `meme` for you.
+Restart Claude Code, then just talk to it. You don't name templates or flags —
+the skill picks the template that fits the joke, writes the caption, and keeps
+any names you mention. Things you can say:
+
+| You say… | What Claude does |
+|----------|------------------|
+| *"make a 'this is fine' meme about prod being down"* | `fine` template → returns a shareable URL |
+| *"drake meme: manual deploys vs CI/CD"* | `drake` (reject A / prefer B) |
+| *"a meme about choosing between fixing the bug and shipping the feature"* | picks `ds` (two-buttons dilemma) on its own |
+| *"meme about my plan to refactor that keeps breaking tests"* | picks `gru` (plan backfires) |
+| *"make a meme ragging on **Raj** for force-pushing to main"* | keeps the name *Raj* in the caption |
+| *"a 'change my mind' meme that tabs beat spaces"* | `cmm` one-liner |
+| *"meme that staging and prod are the same picture"* | `same` template |
+| *"make me a success-kid meme for fixing the flaky test, and save it as a png"* | `success` → downloads a file with `--open` |
+| *"drop a meme on this PR based on whether CI passed"* | wires up `--print-url` + `gh pr comment` |
+
+It's conversational — *"funnier"*, *"use the two-buttons template instead"*, or
+*"now make the bottom line shorter"* all work as follow-ups.
 
 (Other agents like Codex don't use this skill format — they discover everything
 through `meme --help` and `meme --list`, which already works out of the box.)
