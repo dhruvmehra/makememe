@@ -151,6 +151,20 @@ jobs:
 
 (Also saved at [`examples/pr-meme.yml`](examples/pr-meme.yml).)
 
+### Meme your release
+
+Celebrate a tag with a meme in the release notes or a Slack announcement — just
+feed it the version:
+
+```bash
+ver=$(git describe --tags --abbrev=0)
+url=$(meme -t success "shipped" "$ver" --print-url)
+# drop $url into your GitHub Release body, changelog, or a Slack post
+```
+
+Or just ask your agent: *"create a meme about this release"* — it reads the
+version/changelog and picks a fitting template.
+
 **Slack/Discord:** post a `--print-url` URL to a channel; it auto-unfurls into a
 preview.
 
@@ -217,6 +231,7 @@ any names you mention. Things you can say:
 | *"meme that staging and prod are the same picture"* | `same` template |
 | *"make me a success-kid meme for fixing the flaky test, and save it as a png"* | `success` → downloads a file with `--open` |
 | *"drop a meme on this PR based on whether CI passed"* | wires up `--print-url` + `gh pr comment` |
+| *"create a meme about this release"* | reads the version/changelog → picks a fitting template |
 
 It's conversational — *"funnier"*, *"use the two-buttons template instead"*, or
 *"now make the bottom line shorter"* all work as follow-ups.
