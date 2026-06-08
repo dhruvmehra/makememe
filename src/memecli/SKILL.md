@@ -18,6 +18,25 @@ uv tool install makememe
 # or: pipx install makememe
 ```
 
+## Rules (always follow)
+
+These apply everywhere the tool runs — interactive Claude Code **and** CI/CD:
+
+1. **Always go through the `meme` CLI.** Never hand-build a `memegen.link` URL,
+   never write ad-hoc Python/scripts to construct or fetch one, and never
+   reimplement the escaping. The CLI handles path-segment escaping, line order,
+   errors, and output — reproducing it by hand gets these wrong.
+2. **Discover template ids with `meme --list` (or `--list --json`).** Don't guess
+   ids from memory — guessed ids (`buttons`, `twobuttons`, …) 404. List first,
+   then use a verified id.
+3. **Parse output with `--json`, read it directly.** When you need the path/URL
+   in a script, use `meme ... --json` and read the JSON fields. Do **not** pipe
+   it through `python3 -c`, `sed`, or `awk` to extract values — `--json` /
+   `--print-url` already give you exactly what you need.
+4. **In CI/CD, install and call the CLI** (`pip install makememe` →
+   `meme ... --print-url`). Don't `curl` the API or build URLs inline in a
+   workflow step.
+
 ## Workflow
 
 1. **Choose the most apt template — match the joke's *shape*, not a default.**
