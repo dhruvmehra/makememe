@@ -1,15 +1,32 @@
-# meme
+# meme — a meme CLI your coding agent can drive
 
-A tiny, zero-dependency CLI for generating memes via the free
-[memegen.link](https://memegen.link) API. No API key, no signup, stdlib-only.
+A tiny, **zero-dependency** meme generator built for **coding agents and CI**.
+It ships a bundled Claude Code skill, so you can just say *"drop a 'this is fine'
+meme on the PR"* and the agent runs it — and a copy-paste GitHub Action that
+memes your build status. No API key, no signup, stdlib-only (wraps the free
+[memegen.link](https://memegen.link) API).
 
-Built to be **agent-friendly**: predictable stdout, a `--json` mode, and a
-bundled Claude Code skill so coding agents (Claude Code, Codex, etc.) can drive
-it directly.
+<!-- TODO: replace with an asciinema/GIF of the agent flow + `meme drake "a" "b"` -->
+<!-- ![demo](docs/demo.gif) -->
+
+**Let your agent meme.** Install once, and Claude Code / Codex drive it for you:
+
+```text
+you:   make a "this is fine" meme about prod being down
+agent: $ meme -t fine "prod is down" "this is fine" --print-url
+       → https://api.memegen.link/images/fine/prod_is_down/this_is_fine.png
+```
+
+**Meme your CI.** A `this is fine` meme on every red build — copy-paste workflow
+in [`examples/pr-meme.yml`](examples/pr-meme.yml):
 
 ```bash
-meme drake "not reading docs" "reading docs" -o out.png
+url=$(meme -t fine "tests failed" "this is fine" --print-url)
+gh pr comment "$PR" --body "![meme]($url)"
 ```
+
+It's a normal CLI too — `meme drake "manual deploys" "ci/cd"` works from any
+terminal. See [Usage](#usage).
 
 ## Install
 

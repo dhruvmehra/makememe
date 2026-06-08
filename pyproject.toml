@@ -22,7 +22,9 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Homepage = "https://pypi.org/project/makememe/"
+Homepage = "https://github.com/dhruvmehra/makememe"
+Repository = "https://github.com/dhruvmehra/makememe"
+Issues = "https://github.com/dhruvmehra/makememe/issues"
 "memegen.link API" = "https://api.memegen.link"
 
 [project.scripts]
