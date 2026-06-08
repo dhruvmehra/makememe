@@ -5,7 +5,7 @@ key, no signup, stdlib-only — it wraps the free
 [memegen.link](https://memegen.link) API and hands back a public image URL you
 can embed anywhere with `![meme](url)`.
 
-![demo](docs/demo.gif)
+![Claude Code generating a meme from a plain-English request](docs/claude-code-demo.gif)
 
 <p>
   <img src="https://api.memegen.link/images/fine/prod_is_down/this_is_fine.png" height="170" alt="this is fine meme">
@@ -36,6 +36,8 @@ out of the box via `meme --help` / `meme --list` — no skill needed.)
 <details>
 <summary>Prefer to drive it yourself? It's a normal CLI too.</summary>
 
+![terminal demo](docs/demo.gif)
+
 ```bash
 meme drake "manual deploys" "ci/cd"                       # saves a PNG to a temp folder
 meme -t fine "prod is down" "this is fine" --print-url    # or just print a shareable URL
@@ -43,10 +45,41 @@ meme --list                                               # browse all template 
 ```
 
 No install needed to try it: `uvx --from makememe meme drake "a" "b"`.
-Upgrade with `uv tool upgrade makememe`; check the build with `meme --version`.
 </details>
 
 **Next:** [meme your CI on every PR](#meme-your-ci) with a copy-paste GitHub Action.
+
+## Install / upgrade
+
+```bash
+# install (pick one)
+uv tool install makememe          # recommended — isolated, puts `meme` on PATH
+pipx install makememe
+python3 -m pip install makememe
+
+# install the bundled Claude Code skill, then restart Claude Code
+meme --install-skill              # ~/.claude/skills/meme/ (all projects)
+meme --install-skill --project    # ./.claude/skills/meme/ (this repo only)
+```
+
+**Upgrading:**
+
+```bash
+uv tool upgrade makememe          # pipx: pipx upgrade makememe | pip: pip install -U makememe
+meme --install-skill              # ⚠️ re-run this so the skill updates too
+```
+
+> ⚠️ Upgrading the package does **not** refresh the skill already copied into
+> `~/.claude/skills/meme/`. Re-run `meme --install-skill` after every upgrade (then
+> restart Claude Code), or the agent keeps using the old skill.
+
+**Verify:**
+
+```bash
+meme --version                    # CLI version
+meme --list | head                # CLI runs and reaches templates
+ls ~/.claude/skills/meme/SKILL.md # skill is installed
+```
 
 ## Usage
 

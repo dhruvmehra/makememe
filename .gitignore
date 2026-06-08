@@ -11,6 +11,8 @@ meme.png
 *.jpg
 *.webp
 *.gif
+*.mov
+*.mp4
 !docs/**/*.png
 !docs/**/*.gif
 
