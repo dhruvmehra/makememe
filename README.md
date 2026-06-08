@@ -1,4 +1,4 @@
-# meme — a meme CLI your coding agent can drive
+# makememe — a meme CLI your coding agent can drive
 
 A tiny, **zero-dependency** meme generator built for **coding agents and CI**.
 It ships a bundled Claude Code skill, so you can just say *"drop a 'this is fine'
