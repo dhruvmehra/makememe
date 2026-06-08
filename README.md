@@ -23,8 +23,8 @@ agent: $ meme -t fine "prod is down" "this is fine" --print-url
   <img src="https://api.memegen.link/images/drake/manual_deploys/ci~scd.png" height="170" alt="drake meme">
 </p>
 
-**Meme your CI.** A `this is fine` meme on every red build — copy-paste workflow
-in [`examples/pr-meme.yml`](examples/pr-meme.yml):
+**Meme your CI.** A `this is fine` meme on every red build — the complete
+copy-paste workflow is in [Integrations](#integrations) below:
 
 ```bash
 url=$(meme -t fine "tests failed" "this is fine" --print-url)
@@ -98,10 +98,42 @@ For sharing (CI, chat, comments) you usually want the **public URL**, not a
 local file — `--print-url` returns a permanent memegen.link URL you can embed
 anywhere with `![meme](url)`. No download, no image hosting.
 
-- **GitHub Actions → PR comment:** ready-to-copy workflow at
-  [`examples/pr-meme.yml`](examples/pr-meme.yml) — comments a success/“this is
-  fine” meme on each PR based on whether tests passed.
-- **Slack/Discord:** post the URL to a channel; it auto-unfurls into a preview.
+**GitHub Actions → PR comment.** Drop this in `.github/workflows/pr-meme.yml`,
+change the one test line to your command, and every PR gets a success / "this is
+fine" meme based on whether tests passed. That's the whole setup — no secrets,
+no image hosting (`GITHUB_TOKEN` is built in):
+
+```yaml
+name: pr-meme
+on: pull_request
+permissions:
+  pull-requests: write          # to post the comment
+jobs:
+  meme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        id: tests
+        run: echo "replace this with your test command (e.g. pytest, npm test)"
+      - name: Comment a meme with the result
+        if: always()            # run even when tests fail
+        run: |
+          pip install --quiet makememe
+          if [ "${{ steps.tests.outcome }}" = "success" ]; then
+            url=$(meme -t success "tests" "passed" --print-url)
+          else
+            url=$(meme -t fine "tests failed" "this is fine" --print-url)
+          fi
+          gh pr comment "${{ github.event.pull_request.number }}" --body "![meme]($url)"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+(Also saved at [`examples/pr-meme.yml`](examples/pr-meme.yml).)
+
+**Slack/Discord:** post a `--print-url` URL to a channel; it auto-unfurls into a
+preview.
 
 ```bash
 url=$(meme -t success "build" "passed" --print-url)   # -> public URL, embed it anywhere
