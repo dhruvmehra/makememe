@@ -1,67 +1,40 @@
 # makememe — a meme CLI your coding agent can drive
 
-A tiny, **zero-dependency** meme generator built for **coding agents and CI**.
-It ships a bundled Claude Code skill, so you can just say *"drop a 'this is fine'
-meme on the PR"* and the agent runs it — and a copy-paste GitHub Action that
-memes your build status. No API key, no signup, stdlib-only (wraps the free
-[memegen.link](https://memegen.link) API).
+A tiny, **zero-dependency** meme generator for **coding agents and CI**. No API
+key, no signup, stdlib-only — it wraps the free
+[memegen.link](https://memegen.link) API and hands back a public image URL you
+can embed anywhere with `![meme](url)`.
 
 ![demo](docs/demo.gif)
-
-**Let your agent meme.** Install once, and Claude Code / Codex drive it for you:
-
-```text
-you:   make a "this is fine" meme about prod being down
-agent: $ meme -t fine "prod is down" "this is fine" --print-url
-       → https://api.memegen.link/images/fine/prod_is_down/this_is_fine.png
-```
-
-…and that URL renders straight into your PR or Slack — no download, no hosting:
 
 <p>
   <img src="https://api.memegen.link/images/fine/prod_is_down/this_is_fine.png" height="170" alt="this is fine meme">
   <img src="https://api.memegen.link/images/drake/manual_deploys/ci~scd.png" height="170" alt="drake meme">
 </p>
 
-**Meme your CI.** A `this is fine` meme on every red build — the complete
-copy-paste workflow is in [Integrations](#integrations) below:
+## Quick start
+
+Install (Python 3.8+; [uv](https://docs.astral.sh/uv/) keeps it isolated):
 
 ```bash
-url=$(meme -t fine "tests failed" "this is fine" --print-url)
-gh pr comment "$PR" --body "![meme]($url)"
+uv tool install makememe          # or: pipx install makememe  /  pip install makememe
 ```
 
-It's a normal CLI too — `meme drake "manual deploys" "ci/cd"` works from any
-terminal. See [Usage](#usage).
-
-## Install
-
-Requires Python 3.8+. Easiest is [uv](https://docs.astral.sh/uv/) (installs
-the `meme` command in its own isolated environment):
+Make your first meme:
 
 ```bash
-uv tool install makememe          # or: pipx install makememe
+meme drake "manual deploys" "ci/cd"                       # saves a PNG to a temp folder
+meme -t fine "prod is down" "this is fine" --print-url    # or just print a shareable URL
+meme --list                                               # browse all template ids
 ```
 
-Update later with:
+No install needed to try it: `uvx --from makememe meme drake "a" "b"`.
+Upgrade with `uv tool upgrade makememe`; check the build with `meme --version`.
 
-```bash
-uv tool upgrade makememe
-```
+**Two things people set up next:**
 
-Run once without installing anything:
-
-```bash
-uvx --from makememe meme drake "a" "b"
-```
-
-(If you specifically want pip: `python3 -m pip install makememe`.)
-
-Check the version anytime:
-
-```bash
-meme --version
-```
+- **Let your coding agent meme for you** → [bundled Claude Code skill](#claude-code-skill)
+- **Meme your CI on every PR** → [copy-paste GitHub Action](#meme-your-ci)
 
 ## Usage
 
@@ -98,10 +71,11 @@ For sharing (CI, chat, comments) you usually want the **public URL**, not a
 local file — `--print-url` returns a permanent memegen.link URL you can embed
 anywhere with `![meme](url)`. No download, no image hosting.
 
-**GitHub Actions → PR comment.** Drop this in `.github/workflows/pr-meme.yml`,
-change the one test line to your command, and every PR gets a success / "this is
-fine" meme based on whether tests passed. That's the whole setup — no secrets,
-no image hosting (`GITHUB_TOKEN` is built in):
+### Meme your CI
+
+Drop this in `.github/workflows/pr-meme.yml`, change the one test line to your
+command, and every PR gets a success / "this is fine" meme based on whether
+tests passed. That's the whole setup — no secrets (`GITHUB_TOKEN` is built in):
 
 ```yaml
 name: pr-meme
