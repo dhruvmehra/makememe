@@ -12,6 +12,7 @@ meme.png
 *.webp
 *.gif
 !docs/**/*.png
+!docs/**/*.gif
 
 # envs
 .venv/

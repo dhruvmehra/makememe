@@ -6,8 +6,7 @@ meme on the PR"* and the agent runs it — and a copy-paste GitHub Action that
 memes your build status. No API key, no signup, stdlib-only (wraps the free
 [memegen.link](https://memegen.link) API).
 
-<!-- TODO: replace with an asciinema/GIF of the agent flow + `meme drake "a" "b"` -->
-<!-- ![demo](docs/demo.gif) -->
+![demo](docs/demo.gif)
 
 **Let your agent meme.** Install once, and Claude Code / Codex drive it for you:
 
@@ -16,6 +15,13 @@ you:   make a "this is fine" meme about prod being down
 agent: $ meme -t fine "prod is down" "this is fine" --print-url
        → https://api.memegen.link/images/fine/prod_is_down/this_is_fine.png
 ```
+
+…and that URL renders straight into your PR or Slack — no download, no hosting:
+
+<p>
+  <img src="https://api.memegen.link/images/fine/prod_is_down/this_is_fine.png" height="170" alt="this is fine meme">
+  <img src="https://api.memegen.link/images/drake/manual_deploys/ci~scd.png" height="170" alt="drake meme">
+</p>
 
 **Meme your CI.** A `this is fine` meme on every red build — copy-paste workflow
 in [`examples/pr-meme.yml`](examples/pr-meme.yml):
