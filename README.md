@@ -14,13 +14,27 @@ can embed anywhere with `![meme](url)`.
 
 ## Quick start
 
-Install (Python 3.8+; [uv](https://docs.astral.sh/uv/) keeps it isolated):
+**Give your coding agent a meme button.** Two commands, then just ask:
 
 ```bash
 uv tool install makememe          # or: pipx install makememe  /  pip install makememe
+meme --install-skill              # installs the bundled Claude Code skill
 ```
 
-Make your first meme:
+Restart Claude Code and talk to it normally:
+
+```text
+you:   make a "this is fine" meme about prod being down
+Claude: → https://api.memegen.link/images/fine/prod_is_down/this_is_fine.png
+```
+
+The skill teaches the agent to pick the template that fits the joke (not just
+drake), write the caption, and keep any names you mention — then hand back a URL
+that renders inline in a PR, Slack, or anywhere. (Codex and other agents work
+out of the box via `meme --help` / `meme --list` — no skill needed.)
+
+<details>
+<summary>Prefer to drive it yourself? It's a normal CLI too.</summary>
 
 ```bash
 meme drake "manual deploys" "ci/cd"                       # saves a PNG to a temp folder
@@ -30,11 +44,9 @@ meme --list                                               # browse all template 
 
 No install needed to try it: `uvx --from makememe meme drake "a" "b"`.
 Upgrade with `uv tool upgrade makememe`; check the build with `meme --version`.
+</details>
 
-**Two things people set up next:**
-
-- **Let your coding agent meme for you** → [bundled Claude Code skill](#claude-code-skill)
-- **Meme your CI on every PR** → [copy-paste GitHub Action](#meme-your-ci)
+**Next:** [meme your CI on every PR](#meme-your-ci) with a copy-paste GitHub Action.
 
 ## Usage
 
