@@ -73,11 +73,19 @@ meme --install-skill              # ⚠️ re-run this so the skill updates too
 > `~/.claude/skills/meme/`. Re-run `meme --install-skill` after every upgrade (then
 > restart Claude Code), or the agent keeps using the old skill.
 
+**Skip the approval prompt (optional).** Claude Code asks once before running
+`meme`. To never be prompted, add this to the `permissions` → `allow` list in
+your Claude Code `settings.json`:
+
+```json
+"Bash(meme:*)"
+```
+
 **Verify:**
 
 ```bash
 meme --version                    # CLI version
-meme --list | head                # CLI runs and reaches templates
+meme --list                       # CLI runs and reaches templates
 ls ~/.claude/skills/meme/SKILL.md # skill is installed
 ```
 

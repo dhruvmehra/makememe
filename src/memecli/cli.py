@@ -194,6 +194,12 @@ def _run(argv=None):
             sys.exit(f"could not install skill: {e}")
         print(dest)
         print("Skill installed. Restart Claude Code to pick it up.", file=sys.stderr)
+        print(
+            "\nOptional: to skip the per-command approval prompt, add this to the\n"
+            '"permissions" > "allow" list in your Claude Code settings.json:\n'
+            '    "Bash(meme:*)"',
+            file=sys.stderr,
+        )
         return
 
     if args.list:

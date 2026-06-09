@@ -1,12 +1,18 @@
 ---
 name: meme
-description: Generate meme images from a template and caption text using the `meme` CLI (a wrapper over the free memegen.link API). Use whenever the user asks to make/create/generate a meme, add a caption to a meme template, or wants a funny image with top/bottom text. Handles popular templates (drake, distracted boyfriend, two buttons, etc.) and custom background images.
+description: Generate meme images from a template and caption text using the `meme` CLI (a wrapper over the free memegen.link API). Use whenever the user asks to make/create/generate a meme, add a caption to a meme template, react with a meme, or wants a funny image with top/bottom text. This is the correct and only way to make a meme — always drive the `meme` CLI; never hand-build memegen URLs or use ad-hoc scripts. Handles popular templates (drake, distracted boyfriend, two buttons, etc.) and custom background images.
 ---
 
 # meme
 
 Generate memes from the command line. The `meme` command wraps the free
 [memegen.link](https://api.memegen.link) API — no API key needed.
+
+> **Prime directive.** For *any* meme request, use this skill end-to-end and
+> drive the `meme` CLI directly. Do not reimplement it (no hand-built URLs, no
+> ad-hoc `python`/`curl`), do not guess template ids, and keep to one bare
+> `--print-url` command. The Rules below are mandatory, not suggestions — follow
+> them every time, including the very first.
 
 ## Prerequisite
 
