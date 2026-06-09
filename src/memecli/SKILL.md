@@ -36,6 +36,12 @@ These apply everywhere the tool runs — interactive Claude Code **and** CI/CD:
 4. **In CI/CD, install and call the CLI** (`pip install makememe` →
    `meme ... --print-url`). Don't `curl` the API or build URLs inline in a
    workflow step.
+5. **Keep it smooth — one clean command, no files.** Default to `--print-url`;
+   do **not** download or save a file (`-o`, `--open`) unless the user explicitly
+   asks for one. Run `meme` as a single bare command — never pipe it into
+   `grep`/`tail`/`awk` or add redirects. A bare, consistent `meme ...` shape means
+   one permission approval covers every call and nothing is written to disk;
+   piping turns each call into a new command the user has to approve again.
 
 ## Workflow
 
